@@ -1,0 +1,23 @@
+IFEM-OS (Industrial Fault-tolerant EMbedded Operating System)
+
+
+== Introduction ==
+
+IFEM is a prototype for my BS thesis; it presented a new approach for designing
+operating system by reducing the kernel size and responsibilities to almost a
+simple initialisation routine and let the modules do the rest.  The idea is 
+heavily inspired by ExoKernel and MicroKernel paradigms.
+
+
+== Features ==
+
+When IFEM boots, it does two jobs:  counting the clock ticks and showing the key
+code for every key you press.  So you can use it as a chronometer and a keyboard
+test software ;-)
+
+
+== Notes ==
+
+* Despite my love for operating system development, IFEM development has been
+  stalled since late 2005 since I had other priorities.  If you're interested in
+  developing IFEM I'll gladly help you in your way.

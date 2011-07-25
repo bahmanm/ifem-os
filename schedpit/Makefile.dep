@@ -1,0 +1,2 @@
+main.o: main.c
+asmlib.o: asmlib.S
