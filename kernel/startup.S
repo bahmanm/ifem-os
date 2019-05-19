@@ -1,19 +1,19 @@
 /******************************************************************************
- * IFEM OS - kernel/startup.S                                                 * 
+ * IFEM OS - kernel/startup.S                                                 *
  * Copyright (C) 2008 Bahman Movaqar (bahman AT bahmanm.com)                  *
  *                                                                            *
- * This program is free software; you can redistribute it and/or              * 
- * modify it under the terms of the GNU General Public License                * 
- * as published by the Free Software Foundation; either version 2             * 
- * of the License, or (at your option) any later version.                     * 
+ * This program is free software; you can redistribute it and/or              *
+ * modify it under the terms of the GNU General Public License                *
+ * as published by the Free Software Foundation; either version 2             *
+ * of the License, or (at your option) any later version.                     *
  *                                                                            *
  * This program is distributed in the hope that it will be useful,            *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
- * GNU General Public License for more details.                               * 
- *                                                                            * 
- * You should have received a copy of the GNU General Public License          * 
- * along with this program; if not, write to the Free Software                * 
+ * GNU General Public License for more details.                               *
+ *                                                                            *
+ * You should have received a copy of the GNU General Public License          *
+ * along with this program; if not, write to the Free Software                *
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,                 *
  * MA  02110-1301, USA.                                                       *
  ******************************************************************************/
@@ -57,11 +57,11 @@ _startup:
 	movl	%cr0, %eax
 	orl	$0x00000001, %eax
 	movl	%eax, %cr0
-	
+
 	# Clear NT (Nested Task) mode flag.
 	pushf
 	popw	%ax
-	andw	$0xBFFF, %ax
+	andw	$0xbfff, %ax
 	pushw	%ax
 	popf
 
@@ -103,14 +103,14 @@ pm_begin:
 	movw	%ax, %ss
 	movl	$0x09fff0, %eax
 	movl	%eax, %esp
-	
+
 	# Load a dummy task.This is needed to switch to kernel task later.
 	movw	$GDT_TASK_DUMMY, %ax
 	ltr	%ax
-	
+
 	# Jump to kernel entry & initializtion routine.
 	call	kernel_entry
-		
+
 eternity:
 	# If everything goes right, this is unreachable.
 	jmp	eternity
@@ -124,7 +124,7 @@ eternity:
 		.word	0x0000
 p_gdtr:		.word	(GDT_SIZE * 8) - 1
 		.long	p_gdt
-		
+
 	.balign 0x08
 p_gdt:
 		.word	0x0000, 0x0000, 0x0000, 0x0000  # system reserved
@@ -137,7 +137,7 @@ p_gdt:
 		.rept	GDT_SIZE - 6
 		.word	0x0000, 0x0000, 0x0000, 0x0000
 		.endr
-		
+
 	# Declare variables.
 	.data
 gdt:

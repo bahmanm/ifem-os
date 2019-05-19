@@ -41,14 +41,14 @@ int main(int argc, char *argv[])
 	long size, addr1, padd_size, i;
 	unsigned char ch;
 
-	if (argc == 1) {
-		fprintf(stderr, "Usage: imgsize PNX_IMG ADDR1\n");
+	if (argc != 3) {
+		fprintf(stderr, "Usage: imgsize IFEM_IMG KERNEL_IMG\n");
 		return 0;
 	}
 
 	if ((fd = open(argv[1], O_RDWR)) < 0) err_exit(1);
 
-	if ((fd2 = open("ifem.bin", O_RDWR)) < 0) err_exit(1);
+	if ((fd2 = open(argv[2], O_RDWR)) < 0) err_exit(1);
 	if ((addr1 = lseek(fd2,0,SEEK_END)) < 0) err_exit(1);
 	addr1 += 0x600;
 	close(fd2);
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 	close(fd);
 
 	fprintf(stderr, "===============\n");
-	fprintf(stderr, "ImgSize Report:\n");
+	fprintf(stderr, "imgsize report:\n");
 	fprintf(stderr, "===============\n");
 	fprintf(stderr, "Kernel image size = %ld bytes\n", size);
 	fprintf(stderr, "Kernel image size = %d sectors\n", sectors);

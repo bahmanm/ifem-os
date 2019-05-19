@@ -21,7 +21,7 @@
 .include "segconst.s"
 
 .global boot
-	
+
 	.org	0
 	.code16
 	.balign 0x08
@@ -44,48 +44,36 @@ begin:
 	movw	$0x7c0,	%ax
 	movw	%ax, %ds
 	movw	%ax, %es
-
+        #
 	movw	$0xff60, %ax
 	movw	%ax, %ss
-
+        #
 	movw	$0xfff0, %sp
 
-	movb	%dl, bootdev	# save boot device #
-	# Save schedpit module offset to 0x5FC
-	movw	$0, %ax
-	movw	%ax, %es
-	movw	$0x5FC, %si
-	movw	(schedpit_off), %ax
-	movw	%ax, %es:(%si)
-	addw	$2, %si
-	movw	(schedpit_off + 2), %ax
-	movw	%ax, %es:(%si)
-		
-	movw	$0x7c0,	%ax
-	movw	%ax, %es
+        # Save the boot device.
+	movb	%dl, bootdev
+
 	# Write a msg to the screen, and show a progress bar (by dots).
 	movw	$intro_msg, %ax
 	movw	$30, %cx
 	call	write_str
 	call	write_dot
-	
+
 	# Move bootloader to new_seg:new_off. DS is already set.
 	# Source address.
 	movw	$0x7c0, %ax
 	movw	%ax, %ds
 	subw	%si, %si
-
 	# Destination address.
 	movw	$NEW_SEG, %ax
 	movw	%ax, %es
 	subw	%di, %di
-
-	movw	$256, %cx	# how many words to be moved?
-
+        # How many words to be moved?
+	movw	$256, %cx
+        #
 	cld
-	rep		# move bootloader.
-	movsw
-	
+	rep     movsw
+
 	call	write_dot
 	ljmp	$NEW_SEG, $relocate 	# jump to new place
 
@@ -122,7 +110,7 @@ read_startup:
 	movw	startup_size, %cx
 	movw	$K_SEG, %ax	# buffer segment
 	movw	%ax, %es
-	movw	$K_OFF, %bx	# buffer offset 
+	movw	$K_OFF, %bx	# buffer offset
 read_loop:
 	pushw	%cx
 	cmpw	$0, %cx		# all the startup has been read?
@@ -152,7 +140,7 @@ do_read:
 	call 	write_dot	# update progress bar
 	# Update variables.
 	movw	%es, %ax	# advance 512 bytes in destination segment
-	addw	$0x20, %ax	
+	addw	$0x20, %ax
 	movw	%ax, %es
 	incb	curr_sect	# next sector
 	popw	%cx		# decrease total # of sectors to be read
@@ -161,7 +149,7 @@ do_read:
 read_done:
 	# Startup code loaded successfully. Turn off drive motor and Jump to it.
 	# Taken from NUXI.
-        movw    $0x03F2, %dx       # turn off drive motor
+        movw    $0x03f2, %dx       # turn off drive motor
         xorb    %al, %al
         outb    %al, %dx
 	ljmp	$K_SEG, $K_OFF
@@ -187,11 +175,11 @@ write_str:
 	# The length of the string is in CX.
 	#
 	movw	%ax, %bx	# string offset
+	movb	$0x0d, %bl	# output color
+	movb	$0x0e, %ah	# service #
 write_loop:
 	movb	(%bx), %al
 	pushw	%bx
-	movb	$0x07, %bl	# output color
-	movb	$0x0e, %ah	# service #
 	int	$0x10
 	popw	%bx
 	incw	%bx

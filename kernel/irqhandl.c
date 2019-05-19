@@ -1,19 +1,19 @@
 /******************************************************************************
- * IFEM OS - kernel/irqhandle.c                                               * 
+ * IFEM OS - kernel/irqhandle.c                                               *
  * Copyright (C) 2008 Bahman Movaqar (bahman AT bahmanm.com)                  *
  *                                                                            *
- * This program is free software; you can redistribute it and/or              * 
- * modify it under the terms of the GNU General Public License                * 
- * as published by the Free Software Foundation; either version 2             * 
- * of the License, or (at your option) any later version.                     * 
+ * This program is free software; you can redistribute it and/or              *
+ * modify it under the terms of the GNU General Public License                *
+ * as published by the Free Software Foundation; either version 2             *
+ * of the License, or (at your option) any later version.                     *
  *                                                                            *
  * This program is distributed in the hope that it will be useful,            *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
- * GNU General Public License for more details.                               * 
- *                                                                            * 
- * You should have received a copy of the GNU General Public License          * 
- * along with this program; if not, write to the Free Software                * 
+ * GNU General Public License for more details.                               *
+ *                                                                            *
+ * You should have received a copy of the GNU General Public License          *
+ * along with this program; if not, write to the Free Software                *
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,                 *
  * MA  02110-1301, USA.                                                       *
  ******************************************************************************/
@@ -29,7 +29,7 @@
 #include "kernel.h"
 
 /* Master i8259a chip IRQs: */
-PUBLIC int irq_00(int);        /* int 0x20, irq 0: clock */		 
+PUBLIC int irq_00(int);        /* int 0x20, irq 0: clock */
 PUBLIC int irq_01(int);        /* int 0x21, irq 1: keyboard */
 PUBLIC int irq_02(int);        /* int 0x22, irq 2: cascade */
 PUBLIC int irq_03(int);        /* int 0x23, irq 3: 2nd serial */
@@ -57,21 +57,22 @@ PUBLIC int irq_00(int irq)
  */
 
   static unsigned long pit_ticks = 0;
-  
+
   irq_status ^= (1 << IRQ_PIT);	 /* disable PIT IRQ line */
   _outb(PIC1_CTRL_MASK, irq_status);
-  
+
   if (pit_ticks < TICKS2CALL)
   	pit_ticks++;
   else {
-  	log_str("INT 0x20: PIT tick'ed 300 times.\n\0");
+    change_attr(0x0b);
+  	log_str("INT 0x20: PIT tick'ed 2000 times.\n\0");
 	pit_ticks =0;
   }
 
   irq_status ^= (1 << IRQ_PIT);	 /* enable PIT IRQ line */
   _outb(PIC1_CTRL_MASK, irq_status);
   _outb(PIC1_CTRL, PIC_ENABLE);		/* enable chips */
-  
+
   return 1;	/* re-enable interrupts */
 }
 
@@ -81,10 +82,10 @@ PUBLIC int irq_00(int irq)
 PUBLIC int irq_01(int irq)
 {
 /* This routine is the preliminary IRQ handler one for keyboard interrupts.
-   It should buffer KB_BUFFSIZE characters and then pass them to appropriate 
+   It should buffer KB_BUFFSIZE characters and then pass them to appropriate
    task.
  */
- 
+
   #define KB_BUFFSIZE	32	/* size of buffer to store input before passing
   				   it to a task */
   #define KB_DATA	0x60	/* keyboard data I/O port */
@@ -92,11 +93,12 @@ PUBLIC int irq_01(int irq)
   static unsigned char kb_buff[KB_BUFFSIZE];	/* should be global? */
   static short buff_items = 0;
 
+  change_attr(0x0a);
   irq_status ^= (1 << IRQ_KB);	/* disable keyboard IRQ line */
   _outb(PIC1_CTRL_MASK, irq_status);
-  
+
   kb_buff[buff_items++] = _inb(KB_DATA);
-  
+
   log_str("INT 0x21: Input scan code = \0");
   log_num(kb_buff[buff_items - 1]);
   log_char('\n');
@@ -108,6 +110,6 @@ PUBLIC int irq_01(int irq)
   irq_status ^= (1 << IRQ_KB);	/* enable PIT IRQ line */
   _outb(PIC1_CTRL_MASK, irq_status);
   _outb(PIC1_CTRL, PIC_ENABLE);		/* enable chips */
-  
+
   return 1;	/* re-enable interrupts */
 }

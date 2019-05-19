@@ -2,53 +2,42 @@
 #
 include Makefile.conf
 include kernel/Makefile.conf
-include schedpit/Makefile.conf
 include boot/Makefile.conf
 
-OBJS=		$(KERNEL_OBJS) $(SCHEDPIT_OBJS) $(BOOT_OBJS)
+OBJS=		$(KERNEL_OBJS) $(BOOT_OBJS)
 
-KERNEL_ADDR=	0x00000600
 IFEM=		ifem-os
-BOOT=		bootblock
-SCHEDPIT=	schedpit
 
+KERNEL_BIN=	kernel.bin
 KERNEL_LINK=	kernel.link
-SCHEDPIT_LINK=	schedpit.link
+KERNEL_ADDR=	0x00000600
 
 BOOT_BIN=	$(BOOT).bin
-IFEM_BIN=	$(IFEM).bin
-SCHEDPIT_BIN=	$(SCHEDPIT).bin
+
 
 
 all:
-	@for MODULE in util kernel schedpit boot; do \
+	@for MODULE in util kernel boot; do \
 		(cd $$MODULE && $(MAKE)); \
 	done
 
 	@$(ECHO) $(foreach file, $(KERNEL_OBJS), kernel/$(file)) > \
 	$(KERNEL_LINK)
-	@$(ECHO) $(foreach file, $(SCHEDPIT_OBJS), schedpit/$(file)) > \
-	$(SCHEDPIT_LINK)
 
 	@$(ECHO) Linking bootblock...
 	@$(LD) $(LDFLAGS) --oformat binary -Ttext 0x00000000 -e boot -o $(BOOT_BIN) \
-	boot/$(BOOT).o
+	boot/bootblock.o
 
 	@$(ECHO) Linking kernel...
 	@$(LD) $(LDFLAGS) --oformat binary -Ttext $(KERNEL_ADDR) -e startup \
-	 -o $(IFEM_BIN)	$$(cat $(KERNEL_LINK))
+	 -o $(KERNEL_BIN) $$(cat $(KERNEL_LINK))
 
-	@$(ECHO) Linking schedpit...
-	@util/schedpit_addr $(IFEM_BIN) schedpit/link.addr
-	@$(LD) $(LDFLAGS) --oformat binary -Ttext $$(cat schedpit/link.addr) -e schedpit_entry \
-	 -o $(SCHEDPIT_BIN) $$(cat $(SCHEDPIT_LINK))
+	@$(CAT) $(BOOT_BIN) $(KERNEL_BIN) > $(IFEM).img
 
-	@$(CAT) $(BOOT_BIN) $(IFEM_BIN) $(SCHEDPIT_BIN) > $(IFEM).img
-
-	@util/imgsize $(IFEM).img
+	util/imgsize $(IFEM).img $(KERNEL_BIN)
 
 clean:
-	@for MODULE in util kernel schedpit boot; do \
+	@for MODULE in util kernel boot; do \
 		(cd $$MODULE && $(MAKE) clean); \
 	done
 
