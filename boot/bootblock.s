@@ -55,9 +55,8 @@ begin:
 
 	# Write a msg to the screen, and show a progress bar (by dots).
 	movw	$intro_msg, %ax
-	movw	$30, %cx
+	movw	$29, %cx
 	call	write_str
-	call	write_dot
 
 	# Move bootloader to new_seg:new_off. DS is already set.
 	# Source address.
@@ -152,7 +151,8 @@ read_done:
         movw    $0x03f2, %dx       # turn off drive motor
         xorb    %al, %al
         outb    %al, %dx
-	ljmp	$K_SEG, $K_OFF
+        jmp     hlt_on_err
+	#ljmp	$K_SEG, $K_OFF
 
 read_error:
 	# An error occured reading from the disk.
@@ -175,14 +175,16 @@ write_str:
 	# The length of the string is in CX.
 	#
 	movw	%ax, %bx	# string offset
+write_loop:
+        pushw   %cx
+	pushw	%bx
+	movb	(%bx), %al
 	movb	$0x0d, %bl	# output color
 	movb	$0x0e, %ah	# service #
-write_loop:
-	movb	(%bx), %al
-	pushw	%bx
 	int	$0x10
 	popw	%bx
 	incw	%bx
+        popw    %cx
 	loop	write_loop
 
 	ret
@@ -201,13 +203,9 @@ write_dot:
 
 	#######################################################################
 	# Data storage
-intro_msg:	.ascii	"IFEM Boot Loader 0.1"
-		.byte	0x0d, 0x0a
-		.ascii	"Loading"
-reseterr_msg:	.byte	0x0d, 0x0a
-		.ascii	"Reset error!"
-readerr_msg:	.byte	0x0d, 0x0a
-		.ascii	"Read error!"
+intro_msg:	.ascii	"IFEM Boot Loader 1.0\n\rLoading"
+reseterr_msg:	.ascii	"\n\rReset error!"
+readerr_msg:	.ascii	"\n\rRead error!"
 
 	.org	510
 	.byte	0x55, 0xaa
