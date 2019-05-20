@@ -151,8 +151,7 @@ read_done:
         movw    $0x03f2, %dx       # turn off drive motor
         xorb    %al, %al
         outb    %al, %dx
-        jmp     hlt_on_err
-	#ljmp	$K_SEG, $K_OFF
+	ljmp	$K_SEG, $K_OFF
 
 read_error:
 	# An error occured reading from the disk.
