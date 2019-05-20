@@ -38,7 +38,7 @@ void kernel_entry(void)
    immediately after entering protected mode in 'startup.s' and before doing
    any initialization there.
  */
-  char *greet = "Welcome to IFEM 0.1!\n\n\0";
+  char *greet = "Welcome to IFEM 0.0.1!\n\n\0";
   struct tssdesc_s desc;
   unsigned i;
 
