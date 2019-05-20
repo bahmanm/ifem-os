@@ -36,6 +36,12 @@ all:
 
 	util/imgsize $(IFEM).img $(KERNEL_BIN)
 
+pad512:
+	current_size=$$( stat -c '%s' "$(IFEM).img" ); \
+	padding=$$(( 512 - $$(( current_size % 512 )))); \
+	$(DD) if=/dev/zero bs=1 count="$${padding}" >> $(IFEM).img
+
+
 clean:
 	@for MODULE in util kernel boot; do \
 		(cd $$MODULE && $(MAKE) clean); \
