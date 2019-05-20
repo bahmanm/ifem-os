@@ -47,7 +47,7 @@
 #define NULL	((void *)(0))
 
 #define FREQ	60	/* timer frequency */
-#define TICKS2CALL	2000	/* how many clock ticks to ignore, prior to
+#define TICKS2CALL	200	/* how many clock ticks to ignore, prior to
 				   calling scheduler */
 
 #endif /* IFEM__CONST_H */

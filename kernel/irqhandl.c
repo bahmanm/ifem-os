@@ -65,7 +65,7 @@ PUBLIC int irq_00(int irq)
   	pit_ticks++;
   else {
     change_attr(0x0b);
-  	log_str("INT 0x20: PIT tick'ed 2000 times.\n\0");
+  	log_str("INT 0x20: PIT tick'ed 200 times.\n\0");
 	pit_ticks =0;
   }
 
