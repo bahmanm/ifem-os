@@ -4,6 +4,8 @@ romimage: file=/home/bahman/Programs/Bochs/share/bochs/BIOS-bochs-legacy
 vgaromimage: file=/home/bahman/Programs/Bochs/share/bochs/VGABIOS-elpin-2.40
 ##
 ##
+cpu: count=1, ips=1000000
+clock: sync=slowdown, time0=local
 megs: 8
 floppya: 1_44=ifem-os.img, status=inserted
 boot: a
