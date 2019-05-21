@@ -5,11 +5,9 @@
 include ../Makefile.conf
 include Makefile.conf
 
-OBJS=		$(UTIL_OBJS)
+all: $(UTIL_BINS)
 
-all: $(OBJS)
-
-imgsize.o: imgsize.c
-
+imgsize:
+	@$(CC) $(CFLAGS) -o imgsize imgsize.c
 clean:
 	@$(RM) -f *.o

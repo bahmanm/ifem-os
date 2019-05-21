@@ -1,30 +1,30 @@
 /******************************************************************************
- * IFEM OS - kernel/globfunc.h                                                * 
+ * IFEM OS - kernel/globfunc.h                                                *
  * Copyright (C) 2008 Bahman Movaqar (bahman AT bahmanm.com)                  *
  *                                                                            *
- * This program is free software; you can redistribute it and/or              * 
- * modify it under the terms of the GNU General Public License                * 
- * as published by the Free Software Foundation; either version 2             * 
- * of the License, or (at your option) any later version.                     * 
+ * This program is free software; you can redistribute it and/or              *
+ * modify it under the terms of the GNU General Public License                *
+ * as published by the Free Software Foundation; either version 2             *
+ * of the License, or (at your option) any later version.                     *
  *                                                                            *
  * This program is distributed in the hope that it will be useful,            *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
- * GNU General Public License for more details.                               * 
- *                                                                            * 
- * You should have received a copy of the GNU General Public License          * 
- * along with this program; if not, write to the Free Software                * 
+ * GNU General Public License for more details.                               *
+ *                                                                            *
+ * You should have received a copy of the GNU General Public License          *
+ * along with this program; if not, write to the Free Software                *
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,                 *
  * MA  02110-1301, USA.                                                       *
  ******************************************************************************/
 
 /*
- * Prototypes all global function used kernel-wide.
+ * Prototypes of all global function used kernel-wide.
  */
 #ifndef KERNEL__GLOBFUNC_H
 #define KERNEL__GLOBFUNC_H
 
-/* 
+/*
  * asmlib.S
  */
 PUBLIC void _sti(void);	 /* enables interrupts */
@@ -38,7 +38,7 @@ PUBLIC void _task_run(unsigned);  /* switches to kernel task */
 PUBLIC u16_t _ts_flag(void);	/* returns TS (task switched) flag */
 PUBLIC void _reset_busy(u16_t);  /* reset busy bit of a TSS descriptor */
 
-/* 
+/*
  * logdev.c
  */
 PUBLIC void log_char(char);  /* write a char to kernel log device */
@@ -133,7 +133,7 @@ PUBLIC int int_dispatch(unsigned);
  */
 /* Add descriptors at the requested index to IDT and GDT. */
 PUBLIC unsigned add2gdt(struct segdesc_s *, unsigned short);
-PUBLIC unsigned add2idt(struct gatdesc_s *, unsigned short);  
+PUBLIC unsigned add2idt(struct gatdesc_s *, unsigned short);
 /* Setup descriptors. */
 PUBLIC void setup_tss_desc(struct tssdesc_s *, struct tss_s *, u8_t, u8_t);
 /* Setup gates. */
@@ -155,7 +155,7 @@ PUBLIC void irq_set_handler(int, irq_handler_t);
  * irqhandl.c
  */
 /* Master i8259a chip IRQs: */
-PUBLIC int irq_00(int);        /* int 0x20, irq 0: clock */		 
+PUBLIC int irq_00(int);        /* int 0x20, irq 0: clock */
 PUBLIC int irq_01(int);        /* int 0x21, irq 1: keyboard */
 PUBLIC int irq_02(int);        /* int 0x22, irq 2: cascade */
 PUBLIC int irq_03(int);        /* int 0x23, irq 3: 2nd serial */

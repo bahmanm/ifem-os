@@ -1,19 +1,19 @@
 /******************************************************************************
- * IFEM OS - kernel/cup.h                                                     * 
+ * IFEM OS - kernel/cpu.h                                                     *
  * Copyright (C) 2008 Bahman Movaqar (bahman AT bahmanm.com)                  *
  *                                                                            *
- * This program is free software; you can redistribute it and/or              * 
- * modify it under the terms of the GNU General Public License                * 
- * as published by the Free Software Foundation; either version 2             * 
- * of the License, or (at your option) any later version.                     * 
+ * This program is free software; you can redistribute it and/or              *
+ * modify it under the terms of the GNU General Public License                *
+ * as published by the Free Software Foundation; either version 2             *
+ * of the License, or (at your option) any later version.                     *
  *                                                                            *
  * This program is distributed in the hope that it will be useful,            *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
- * GNU General Public License for more details.                               * 
- *                                                                            * 
- * You should have received a copy of the GNU General Public License          * 
- * along with this program; if not, write to the Free Software                * 
+ * GNU General Public License for more details.                               *
+ *                                                                            *
+ * You should have received a copy of the GNU General Public License          *
+ * along with this program; if not, write to the Free Software                *
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,                 *
  * MA  02110-1301, USA.                                                       *
  ******************************************************************************/
@@ -40,12 +40,9 @@
 #define GDT_INTERFACE_DATA	0x0020
 #define GDT_TASK_DUMMY		0x0028
 #define GDT_TASK_KERNEL		0x0030
-#define GDT_TASK_PIT		0x0038
-#define GDT_TASK_KB		0x0040
-#define GDT_INTERFACE_1		0x0048
 
 
-/* Constants related to i386 segment descriptor attributes and modes. They are 
+/* Constants related to i386 segment descriptor attributes and modes. They are
    stored in two bytes. The format of these bytes is as follows:
    - Lower byte:   P | DPL | DT | Da/Co | E/C | W/R | A
    - Higher bytes: G | D/B | 0 | AVL | limit(16..19)
@@ -68,7 +65,7 @@
 #define SDESC_GRAN	0x80	/* granullarity bit */
 
 
-/* Constants related to i386 TSS descriptor attributes and modes. They are 
+/* Constants related to i386 TSS descriptor attributes and modes. They are
    stored in two bytes. The format of these bytes is as follows:
    - Lower byte:   P | DPL | 0 | 1 | 0 | B | 1
    - Higher bytes: G | 0 | 0 | AVL | limit(16..19)
