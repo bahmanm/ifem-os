@@ -13,8 +13,8 @@ The idea behind IFEM is having an operating system where
   - kernel is a minimal and thin piece of functionality
   - modules and drivers don't know anything about each other beyond APIs and
     SPIs
-  - and there are no dependecies during compile and link time - instead pieces
-    fit together only at runtime.
+  - and there are no dependencies during compile and link time - instead pieces
+    fit together only at run-time.
 
 # Current Status
 
@@ -23,10 +23,10 @@ Version 0.0.1 is the first release where "something works":
   - bootloader loads the OS from the disk (image) into memory and hands the
     control over to kernel.
   - kernel
-    * does basic harware init routine
+    * does basic hardware init routine
     * enables the protected mode
     * sets up two interrupt handlers (timer and keyboard)
-  - interrupt handlers print the keycode on each keyboard interrupt and
+  - interrupt handlers print the key-code on each keyboard interrupt and
     announce a message every 200 timer ticks.
 
 Here's a recording of its execution:
