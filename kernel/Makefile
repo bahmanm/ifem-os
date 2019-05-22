@@ -1,23 +1,23 @@
 # IFEM Kernel Makefile
 #
 include ../Makefile.conf
-include Makefile.conf
 
-OBJS=		$(KERNEL_OBJS)
+OBJECTS := startup.o main.o asmlib.o varalloc.o logdev.o int.o cpu.o isr.o \
+           i8259a.o irqhandl.o intrface.o
+CFLAGS := $(CFLAGS) -I ../include
 
-all: $(OBJS)
 
-include Makefile.dep
+all: $(OBJECTS)
 
 .c.o:
-	@$(GCC) $(KERNEL_FLAGS) -c $<
+	$(CC) $(CFLAGS) -c $<
 
 .S.o:
-	@$(GCC) $(KERNEL_FLAGS) -c $<
+	$(CC) $(CFLAGS) -c $<
+
+bin:
+	@$(LD) $(LDFLAGS) --oformat binary -Ttext $(KERNEL_ADDR) -e startup \
+	 -o $(KERNEL_BIN) $(OBJECTS)
 
 clean:
-	@$(RM) -f *.o *.bin
-
-dep:
-	@$(GCC) -M -I$(INCLUDE) *.c > Makefile.dep
-	@$(GCC) -M -I$(INCLUDE) *.S >> Makefile.dep
+	-rm -f *.o *.bin
