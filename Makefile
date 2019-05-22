@@ -12,7 +12,7 @@ KERNEL_BIN=	kernel.bin
 KERNEL_LINK=	kernel.link
 KERNEL_ADDR=	0x00000600
 
-BOOT_BIN=	$(BOOT).bin
+BOOT_BIN=	bootblock.bin
 
 
 
