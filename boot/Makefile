@@ -6,13 +6,23 @@ OBJECTS := bootblock.o
 ASFLAGS := --32
 
 
-all: $(OBJECTS)
+all: compile bin
+.PHONY: all
 
+###
+compile: $(OBJECTS)
+.PHONY: compile
+
+###
 bootblock.o: bootblock.s segconst.s
 
-bin:
+###
+bin: compile
 	@$(LD) $(LDFLAGS) -Ttext $(BOOTBLOCK_ADDR) -e boot -o $(BOOTBLOCK_BIN) \
 	$(OBJECTS)
+.PHONY: bin
 
+###
 clean:
 	rm -f *.o *.bin
+.PHONY: clean
