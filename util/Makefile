@@ -1,13 +1,20 @@
-# IFEM Utilities Makefile
-# Author:		Bahman Movaqar (bmovaqar@yahoo.com)
-# Last Revision:	Aug 23 2004, 20:54
+# IFEM util Makefile
 #
 include ../Makefile.conf
-include Makefile.conf
 
-all: $(UTIL_BINS)
+BINS := imgsize
 
+CFLAGS := -m32 -Wall
+
+all: $(BINS)
+.PHONY: all
+
+###
 imgsize:
 	@$(CC) $(CFLAGS) -o imgsize imgsize.c
+.PHONY: imgsize
+
+###
 clean:
-	@$(RM) -f *.o
+	rm -f *.o $(BINS)
+.PHONY: clean

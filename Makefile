@@ -1,53 +1,48 @@
 # IFEM Main Makefile
 #
 include Makefile.conf
-include kernel/Makefile.conf
-include boot/Makefile.conf
 
-OBJS=		$(KERNEL_OBJS) $(BOOT_OBJS)
+all: pad512
 
-IFEM=		ifem-os
+.PHONY: all
 
-KERNEL_BIN=	kernel.bin
-KERNEL_LINK=	kernel.link
-KERNEL_ADDR=	0x00000600
-
-BOOT_BIN=	bootblock.bin
-
-
-
-all:
-	@for MODULE in util kernel boot; do \
-		(cd $$MODULE && $(MAKE)); \
-	done
-
-	@$(ECHO) $(foreach file, $(KERNEL_OBJS), kernel/$(file)) > \
-	$(KERNEL_LINK)
-
-	@$(ECHO) Linking bootblock...
-	@$(LD) $(LDFLAGS) --oformat binary -Ttext 0x00000000 -e boot -o $(BOOT_BIN) \
-	boot/bootblock.o
-
-	@$(ECHO) Linking kernel...
-	@$(LD) $(LDFLAGS) --oformat binary -Ttext $(KERNEL_ADDR) -e startup \
-	 -o $(KERNEL_BIN) $$(cat $(KERNEL_LINK))
-
-	@$(CAT) $(BOOT_BIN) $(KERNEL_BIN) > $(IFEM).img
-
-	util/imgsize $(IFEM).img $(KERNEL_BIN)
-
-pad512:
-	current_size=$$( stat -c '%s' "$(IFEM).img" ); \
+###
+pad512: bootablebin
+	current_size=$$( stat -c '%s' "$(IFEM_BIN)" ); \
 	padding=$$(( 512 - $$(( current_size % 512 )))); \
-	$(DD) if=/dev/zero bs=1 count="$${padding}" >> $(IFEM).img
+	dd if=/dev/zero bs=1 count="$${padding}" >> $(IFEM_BIN)
+.PHONY: pad512
 
+###
+bootablebin: bin
+	cd util && $(MAKE) imgsize
+	util/imgsize $(IFEM_BIN) kernel/$(KERNEL_BIN)
+.PHONY: bootablebin
 
+###
+bin: compile
+	@for MODULE in boot kernel; do \
+		(cd $$MODULE && $(MAKE) bin); \
+	done
+	cat boot/$(BOOTBLOCK_BIN) kernel/$(KERNEL_BIN) > $(IFEM_BIN)
+.PHONY: bin
+
+###
+compile:
+	@for MODULE in kernel boot; do \
+		(cd $$MODULE && $(MAKE) compile); \
+	done
+.PHONY: compile
+
+###
 clean:
 	@for MODULE in util kernel boot; do \
 		(cd $$MODULE && $(MAKE) clean); \
 	done
-
 	@$(RM) -f *.o *.bin *.img *.link
+.PHONY: clean
 
-install:
-	@$(DD) if=$(PNX).img of=$(FD_DEV) bs=$(FD_SECT_SIZE)
+###
+install: all
+	dd if=$(IFEM_BIN) of=$(FD_DEV) bs=$(FD_SECT_SIZE)
+.PHONY: install

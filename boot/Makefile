@@ -1,15 +1,28 @@
 # IFEM Bootloader Makefile
 #
 include ../Makefile.conf
-include Makefile.conf
 
-OBJS=		$(BOOT_OBJS)
+OBJECTS := bootblock.o
+ASFLAGS := --32
 
 
-all: $(OBJS)
+all: compile bin
+.PHONY: all
 
+###
+compile: $(OBJECTS)
+.PHONY: compile
+
+###
 bootblock.o: bootblock.s segconst.s
 
+###
+bin: compile
+	@$(LD) $(LDFLAGS) -Ttext $(BOOTBLOCK_ADDR) -e boot -o $(BOOTBLOCK_BIN) \
+	$(OBJECTS)
+.PHONY: bin
+
+###
 clean:
-	@$(RM) -f *.o *.bin
-	
+	rm -f *.o *.bin
+.PHONY: clean
