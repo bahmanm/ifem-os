@@ -65,8 +65,8 @@ the source tree.
 
 ### Virtualbox
 
-If you intend to run IFEM inside a vbox machine, you need to run `make pad512`
-during build so that vbox recognises `ifem-os.img` as a floppy disk image.
+If you intend to run IFEM inside a vbox machine, you just need to boot your
+vm from `ifem-os.img` as a floppy disk image.
 
 ### Physical machine
 
