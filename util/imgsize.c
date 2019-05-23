@@ -37,7 +37,7 @@
 int main(int argc, char *argv[])
 {
 	int fd, fd2;
-	unsigned short sectors, dummy;
+	unsigned short sectors;
 	long size, addr1, padd_size, i;
 	unsigned char ch;
 
